@@ -9,6 +9,12 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
+camera.position.set(5,5,5);
+
+camera.lookAt(0,0,0);
+
+
+
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const cube = new THREE.Mesh( geometry, material );
@@ -18,7 +24,6 @@ camera.position.z = 5;
 
 function animate() {
 
-  cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
 
   renderer.render( scene, camera );
