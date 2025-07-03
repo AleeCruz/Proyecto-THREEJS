@@ -8,11 +8,11 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Controles orbitales
+// OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.target.set(0, 0, 0); // <-- el punto alrededor del cual orbita
+controls.target.set(0, 0, 0);
 controls.update();
 
 // Cubo en el origen
@@ -21,13 +21,13 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// Cámara apuntando al origen
-camera.position.set(5, 5, 5); // posición inicial
-camera.lookAt(0, 0, 0);
-
-
-const axesHelper = new THREE.axesHelper(10);
+// AxesHelper en el origen
+const axesHelper = new THREE.AxesHelper(2);  // largo de los ejes
 scene.add(axesHelper);
+
+// Cámara posicionada mirando al origen
+camera.position.set(5, 5, 5);
+camera.lookAt(0, 0, 0);
 
 function animate() {
   requestAnimationFrame(animate);
