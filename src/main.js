@@ -1,16 +1,13 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.module.js';
 
-// Escena
+// Escena y cámara
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x111111);
 
-// Cámara
 const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
+  75, window.innerWidth / window.innerHeight, 0.1, 1000
 );
 camera.position.set(5, 5, 10);
 
@@ -20,16 +17,15 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Controles de órbita
+// OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// Cubo base
+// Cubo base y clones
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const baseCube = new THREE.Mesh(geometry, material);
 
-// Clonar cubos y distribuirlos
 const cubos = [];
 for (let i = 0; i < 5; i++) {
   const cubo = baseCube.clone();
@@ -43,7 +39,7 @@ for (let i = 0; i < 5; i++) {
   cubos.push(cubo);
 }
 
-// Plano para recibir sombras
+// Plano para sombras
 const plane = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
   new THREE.ShadowMaterial({ opacity: 0.3 })
@@ -53,11 +49,11 @@ plane.position.y = -5;
 plane.receiveShadow = true;
 scene.add(plane);
 
-// Luz ambiental (suave, general)
+// Luz ambiental
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 
-// SpotLight (con sombras)
+// SpotLight
 const spotLight = new THREE.SpotLight(0xffffff, 1);
 spotLight.position.set(10, 15, 10);
 spotLight.castShadow = true;
@@ -66,6 +62,18 @@ spotLight.penumbra = 0.3;
 spotLight.shadow.mapSize.width = 1024;
 spotLight.shadow.mapSize.height = 1024;
 scene.add(spotLight);
+
+// GUI para controlar SpotLight
+const gui = new dat.GUI();
+const lightFolder = gui.addFolder('SpotLight');
+
+lightFolder.add(spotLight, 'intensity', 0, 5).name('Intensidad');
+lightFolder.add(spotLight.position, 'x', -20, 20).name('Posición X');
+lightFolder.add(spotLight.position, 'y', -20, 20).name('Posición Y');
+lightFolder.add(spotLight.position, 'z', -20, 20).name('Posición Z');
+lightFolder.add(spotLight, 'angle', 0, Math.PI / 2).name('Ángulo');
+lightFolder.add(spotLight, 'penumbra', 0, 1).name('Penumbra');
+lightFolder.open();
 
 // Animación
 function animate() {
@@ -77,10 +85,9 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
-
 animate();
 
-// Ajuste al redimensionar ventana
+// Resize
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
