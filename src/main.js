@@ -16,7 +16,7 @@ document.body.appendChild(renderer.domElement);
 
 // OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // Suaviza el movimiento
+controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 // Cubo
@@ -25,21 +25,21 @@ const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-// Luz
-const light = new THREE.PointLight(0xffffff, 1);
-light.position.set(3, 3,3);
-scene.add(light);
+// Luz ambiental
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // color blanco, intensidad 0.5
+scene.add(ambientLight);
+
+// Luz puntual
+const pointLight = new THREE.PointLight(0xffffff, 1);
+pointLight.position.set(10, 10, 10);
+scene.add(pointLight);
 
 // Animación
 function animate() {
   requestAnimationFrame(animate);
-
-  // Actualiza los controles
   controls.update();
-
   cube.rotation.x += 0.005;
   cube.rotation.y += 0.01;
-
   renderer.render(scene, camera);
 }
 
